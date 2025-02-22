@@ -1,0 +1,2 @@
+package org.example.productcatalogservice_feb2025.controllers;public class ProductController {
+}
