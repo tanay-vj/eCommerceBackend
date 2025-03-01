@@ -1,31 +1,42 @@
 package org.example.productcatalogservice_feb2025.controllers;
 
 import org.example.productcatalogservice_feb2025.dtos.CategoryDTO;
+import org.example.productcatalogservice_feb2025.dtos.FakeStoreProductDTO;
 import org.example.productcatalogservice_feb2025.dtos.ProductDTO;
 import org.example.productcatalogservice_feb2025.models.Category;
 import org.example.productcatalogservice_feb2025.models.Product;
 import org.example.productcatalogservice_feb2025.services.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/products")
 public class ProductController {
 
     @Autowired
+    @Qualifier("sps")
     private IProductService productService;
 
 
-    @GetMapping("/products/")
+    @GetMapping
     public List<ProductDTO> getAllProducts() {
+        List<ProductDTO> productDTOs  = new ArrayList<>();
+        for (Product product : productService.getAllProducts()) {
+            productDTOs.add(from(product));
+        }
 
-        return null;
+        return productDTOs;
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/{id}")
     public ProductDTO getProductDetails(@PathVariable Long id) {
+        if(id<0) {
+            throw new IllegalArgumentException("Please pass product id greater than 0");
+        }
         Product product = productService.getProductById(id);
         if (product == null) {
             return null;
@@ -34,7 +45,7 @@ public class ProductController {
 
     }
 
-    @PatchMapping("/products/{id}")
+    @PatchMapping("/{id}")
     public ProductDTO updateProductDetails(@PathVariable Long id,
                                      @RequestBody ProductDTO productDTO) {
         return null;
@@ -42,22 +53,26 @@ public class ProductController {
 
     }
 
-    @PutMapping("/products/{id}")
+    @PutMapping("/{id}")
     public ProductDTO replaceProductDetails(@PathVariable Long id,
                                            @RequestBody ProductDTO productDTO) {
-        return null;
+        return from(productService.replaceProduct(to(productDTO),id));
+
 
     }
 
-    @PostMapping("/products")
+    @PostMapping
     public ProductDTO createProductDetails( @RequestBody ProductDTO productDTO) {
-        return null;
+        Product input = to(productDTO);
+        Product response = productService.createProduct(input);
+
+        return from(response);
 
     }
 
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/{id}")
     public boolean deleteProductDetails(@PathVariable Long id) {
-        return false;
+        return productService.deleteProduct(id);
     }
 
 
@@ -80,7 +95,20 @@ public class ProductController {
 
     private Product to(ProductDTO productDTO) {
         Product product = new Product();
+        product.setId(productDTO.getId());
         product.setName(productDTO.getName());
+        product.setDescription(productDTO.getDescription());
+        product.setImageURL(productDTO.getImageURL());
+        product.setPrice(productDTO.getPrice());
+        if(productDTO.getCategory()!=null) {
+            Category category = new Category();
+            category.setName(productDTO.getCategory().getName());
+            category.setId(productDTO.getCategory().getId());
+            category.setDescription(productDTO.getCategory().getDescription());
+            product.setCategory(category);
+        }
+
+
         return product;
     }
 
