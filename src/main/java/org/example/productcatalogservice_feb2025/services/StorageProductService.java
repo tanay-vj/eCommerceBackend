@@ -3,12 +3,14 @@ package org.example.productcatalogservice_feb2025.services;
 import org.example.productcatalogservice_feb2025.models.Product;
 import org.example.productcatalogservice_feb2025.repos.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service("sps")
+@Primary
 public class StorageProductService implements  IProductService{
 
     @Autowired

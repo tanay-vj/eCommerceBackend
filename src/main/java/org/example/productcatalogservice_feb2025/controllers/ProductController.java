@@ -18,7 +18,7 @@ import java.util.List;
 public class ProductController {
 
     @Autowired
-    @Qualifier("sps")
+//    @Qualifier("sps")
     private IProductService productService;
 
 
@@ -36,7 +36,10 @@ public class ProductController {
     public ProductDTO getProductDetails(@PathVariable Long id) {
         if(id<0) {
             throw new IllegalArgumentException("Please pass product id greater than 0");
+        } else if(id==0) {
+            throw new IllegalArgumentException("Please pass positive product id");
         }
+//        id++;
         Product product = productService.getProductById(id);
         if (product == null) {
             return null;
@@ -57,15 +60,12 @@ public class ProductController {
     public ProductDTO replaceProductDetails(@PathVariable Long id,
                                            @RequestBody ProductDTO productDTO) {
         return from(productService.replaceProduct(to(productDTO),id));
-
-
     }
 
     @PostMapping
     public ProductDTO createProductDetails( @RequestBody ProductDTO productDTO) {
         Product input = to(productDTO);
         Product response = productService.createProduct(input);
-
         return from(response);
 
     }
