@@ -7,3 +7,6 @@
 [submodule "EmailService"]
 	path = EmailService
 	url = https://github.com/tanay-vj/EmailService.git
+[submodule "PaymentService"]
+	path = PaymentService
+	url = https://github.com/tanay-vj/PaymentService.git
