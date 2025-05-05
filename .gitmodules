@@ -10,3 +10,6 @@
 [submodule "PaymentService"]
 	path = PaymentService
 	url = https://github.com/tanay-vj/PaymentService.git
+[submodule "ServiceDiscovery"]
+	path = ServiceDiscovery
+	url = https://github.com/tanay-vj/ServiceDiscovery.git
